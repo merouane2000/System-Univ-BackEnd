@@ -6,6 +6,12 @@ const router = express.Router();
 router.get("/", (req, res) => {
   res.send("Welcome to systeme univ");
 });
+router.get("/get-subject", (req, res) => {
+  Subject.find({}).then((Subjects)=>{
+
+    res.send(Subjects);
+  })
+});
 
 router.post("/admin/login", (req, res) => {
 
@@ -26,6 +32,7 @@ Admin.create({
 });
 
 });
+
 router.post("/subject", (req, res) => {
   Subject.create({
     subjectName:req.body.values.subjectName ,
@@ -50,6 +57,35 @@ router.post("/subject", (req, res) => {
 
 
 console.log(req.body)
+
+});
+router.post("/student", (req, res) => {
+  cosnt 
+  console.log(req.body.values)
+
+//   Subject.create({
+//     subjectName:req.body.values.subjectName ,
+//     coif: req.body.values.coif ,
+//     credit:req.body.values.credit ,
+//     exam:req.body.values.EXAM  ,
+//     tp: req.body.values.TP ,
+//     td: req.body.values.TD ,
+//     subjectoFSemaster:req.body.values.Semaster
+//   })
+//   .then(() => {
+//     res.send({
+//        IsCreated: true,
+//     });
+//   })
+//   .catch((e) => {
+//     res.send({
+//       msg: e,
+//       IsCreated: false,
+//     });
+//   });
+
+
+// console.log(req.body)
 
 });
 
