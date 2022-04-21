@@ -7,16 +7,17 @@ const StudentSchema = new Schema({
   name: { type: String, required: true },
   familyName: { type: String, required: true },
   registrationNumber: { type: Number, required: true },
-  classLevel: { type: String, required: true },
+  classRoom: { type: String, required: true },
   MoyenneSe1: { type: Number, min:0,max:20 },
   MoyenneSe2: { type: Number, min:0,max:20 },
   MoyenneGe: { type: Number, min:0,max:20 },
-  pointes: {
-    nameOfSubject: { type: String, required: true },
+  pointes:[ {
+   subjectName: { type: String, required: true },
     exam: { type: Number, min:0,max:20 },
     TD: { type: Number , min:0,max:20},
     TP: { type: Number , min:0,max:20 },
-  },
+    subjectMoyenne: { type: Number , min:0,max:20 },
+  }],
 
   createdAt: { type: Date, default: Date.now },
   modifiedAt: { type: Date, default: Date.now },
