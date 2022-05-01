@@ -8,9 +8,9 @@ const SubjectSchema = new Schema({
   subjectoFSemaster: { type: String },
   coif: { type: Number, min: 1, max: 5 },
   credit: { type: Number, min: 1, max: 5 },
-  exam: { type: String },
-  tp: { type: String },
-  td: { type: String },
+  coifExam:{type:Number},
+  coifTp:{type:Number},
+  coifTd:{type:Number},
   createdAt: { type: Date, default: Date.now },
   modifiedAt: { type: Date, default: Date.now },
 });
