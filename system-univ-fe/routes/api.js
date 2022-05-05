@@ -29,6 +29,20 @@ router.get("/get-student-and-promo", (req, res) => {
       res.send(x);
     });
 });
+router.post("/get-subjects", (req, res) => {
+  const { student_id, selectedClass } = req.body;
+  console.log( req.body)
+  Subject.find({
+    $and: [
+      { student_id: student_id },
+      { semester: selectedClass.semastre },
+      { year: selectedClass.year },
+    ],
+  }).then((subjects) => {
+    console.log(subjects);
+    res.send(subjects);
+  });
+});
 
 router.post("/admin/login", (req, res) => {
   Admin.create({
@@ -49,15 +63,17 @@ router.post("/admin/login", (req, res) => {
 });
 
 router.post("/subject", (req, res) => {
-  const data = req.body.values;
+  const { values, selectedClass, student_id } = req.body;
   Subject.create({
-    subjectName: data.subjectName,
-    coif: data.coif,
-    credit: data.credit,
-    exam: data.EXAM,
-    tp: data.TP,
-    td: data.TD,
-    subjectoFSemaster: data.Semaster,
+    name: values.name,
+    coef: values.coef,
+    credit: values.credit,
+    coefExam: values.coefExam,
+    coefTP: values.coefTP,
+    coefTD: values.coefTD,
+    student_id: student_id,
+    semester: selectedClass.semastre,
+    year: selectedClass.year,
   })
     .then(() => {
       res.send({
