@@ -9,29 +9,70 @@ const router = express.Router();
 router.get("/", (req, res) => {
   res.send("Welcome to systeme univ");
 });
+
 router.get("/get-subject", (req, res) => {
   Subject.find({}).then((Subjects) => {
     res.send(Subjects);
   });
 });
-router.get("/get-student", (req, res) => {
-  Student.find({}).then((Subjects) => {
-    res.send(Subjects);
-  });
+
+const getCustomizedStudentsList = async () => {
+  const data = await Student.find().populate("classes").exec();
+  let students = [...data];
+
+  for (let index = 0; index < students.length; index++) {
+    const subjects = await Subject.find({ student_id: students[index]._id });
+    let student = { ...students[index] };
+    student._doc.subjects = [...subjects];
+    students[index] = { ...student };
+  }
+  return students;
+};
+
+router.get("/get-student", async (req, res) => {
+  const data = await getCustomizedStudentsList();
+  res.send(data);
 });
 
 router.get("/get-student-and-promo", (req, res) => {
-  Student.find()
+  Student.find({})
     .populate("classes")
     .exec()
-    .then((x) => {
-      console.log(x);
-      res.send(x);
+    .then((students) => {
+      res.send(students);
     });
 });
+
+const updateOneSubject = async (subject, student_id, semester, year) => {
+  await Subject.updateOne(
+    {
+      $and: [
+        { student_id: student_id },
+        { semester: semester },
+        { year: year },
+        { _id: subject._id },
+      ],
+    },
+    subject
+  );
+};
+
+router.post("/update-subjects", (req, res) => {
+  const { subjects, selectedClass, student_id } = req.body;
+
+  subjects.map((subject) => {
+    updateOneSubject(
+      subject,
+      student_id,
+      selectedClass.semastre,
+      selectedClass.year
+    );
+  });
+});
+
 router.post("/get-subjects", (req, res) => {
   const { student_id, selectedClass } = req.body;
-  console.log( req.body)
+  console.log(req.body);
   Subject.find({
     $and: [
       { student_id: student_id },
@@ -105,7 +146,7 @@ router.post("/student", (req, res) => {
     (student.classes = [classes]);
   student
     .save()
-    .then(() => res.send({ isCreated: true }))
+    .then(() => res.send({ isCreated: true, student: student }))
     .catch((e) => {
       res.send({ isCreated: false, msg: e });
     });
