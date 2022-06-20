@@ -1,9 +1,9 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const Admin = require("../models/Admin");
 const Classes = require("../models/Classes");
 const Student = require("../models/Student");
 const Subject = require("../models/Subject");
+const User = require("../models/User");
 const router = express.Router();
 
 router.get("/", (req, res) => {
@@ -85,14 +85,16 @@ router.post("/get-subjects", (req, res) => {
   });
 });
 
-router.post("/admin/login", (req, res) => {
-  Admin.create({
+router.post("/user/login", (req, res) => {
+  User.create({
     email: req.body.email,
     password: req.body.password,
+    role: req.body.role,
   })
     .then(() => {
       res.send({
         IsCreated: true,
+        role: req.body.role
       });
     })
     .catch((e) => {
