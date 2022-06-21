@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const Classes = require("../models/Classes");
 const Student = require("../models/Student");
 const Subject = require("../models/Subject");
+const Teacher = require("../models/Teacher");
 const User = require("../models/User");
 const router = express.Router();
 
@@ -28,6 +29,11 @@ const getCustomizedStudentsList = async () => {
   }
   return students;
 };
+router.get("/teacher-info", (req, res) => {
+  Teacher.find({}).then((teachers) => {
+    res.send(teachers);
+  });
+});
 
 router.get("/get-student", async (req, res) => {
   const data = await getCustomizedStudentsList();
@@ -95,6 +101,28 @@ router.post("/user/login", (req, res) => {
       res.send({
         IsCreated: true,
         role: req.body.role
+      });
+    })
+    .catch((e) => {
+      res.send({
+        msg: e,
+        IsCreated: false,
+      });
+    });
+});
+router.post("/teacher-create", (req, res) => {
+  const data =req.body.values 
+
+  Teacher.create({
+    email:data.email,
+    name: data.FirstName,
+    familyName:  data.FamilyName,
+    subject:data.teacherSubject,
+    isActive:true
+  })
+    .then(() => {
+      res.send({
+        IsCreated: true,
       });
     })
     .catch((e) => {
