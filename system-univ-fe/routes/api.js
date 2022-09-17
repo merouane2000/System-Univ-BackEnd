@@ -1,6 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const Classes = require("../models/Classes");
+const Rachat = require("../models/Rachat");
 const Student = require("../models/Student");
 const Subject = require("../models/Subject");
 const Teacher = require("../models/Teacher");
@@ -180,6 +181,17 @@ router.post("/student", (req, res) => {
     .catch((e) => {
       res.send({ isCreated: false, msg: e });
     });
+});
+router.post("/rachat", (req, res) => {
+  const data = req.body
+  Rachat.create({
+    rachat: data.rachat,
+    promo:data.promo,
+    year:data.year
+  })
+  .then(() => res.send({ isCreated: true }))
+ 
+
 });
 
 module.exports = router;
